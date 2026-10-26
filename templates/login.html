@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ChaOrder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>ChaOrder</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/menu">Menu</a>
+            <a href="/cart">Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})</a>
+
+            {% if session.get('user_id') %}
+                <div class="dropdown">
+                    <a class="dropdown-toggle">Hello, {{ session.get('full_name') }} ▾</a>
+                    <div class="dropdown-content">
+                        <a href="/my_orders">My Orders</a>
+                        <a href="/profile">Profile</a>
+                        {% if session.get('role') == 'admin' %}
+                            <a href="/admin">Admin Dashboard</a>
+                            <a href="/admin/products">Manage Products</a>
+                        {% endif %}
+                        <hr style="margin: 0; border: none; border-top: 1px solid #eee;">
+                        <a href="/logout" style="color: #dc3545 !important;">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="form-container">
+        <div class="form-box">
+            <h2>Login</h2>
+
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+
+            <form method="POST">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+
+            <div class="link">
+                Don't have an account? <a href="/register">Register</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

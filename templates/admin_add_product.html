@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - ChaOrder Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>ChaOrder Admin</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/menu">Menu</a>
+            <a href="/cart">Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})</a>
+
+            {% if session.get('user_id') %}
+                <div class="dropdown">
+                    <a class="dropdown-toggle">Hello, {{ session.get('full_name') }} ▾</a>
+                    <div class="dropdown-content">
+                        <a href="/my_orders">My Orders</a>
+                        <a href="/profile">Profile</a>
+                        {% if session.get('role') == 'admin' %}
+                            <a href="/admin">Admin Dashboard</a>
+                            <a href="/admin/products">Manage Products</a>
+                        {% endif %}
+                        <hr style="margin: 0; border: none; border-top: 1px solid #eee;">
+                        <a href="/logout" style="color: #dc3545 !important;">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="form-container">
+        <div class="form-box">
+            <h2>Add New Product</h2>
+
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+
+            <form method="POST">
+                <input type="text" name="name" placeholder="Product Name" required>
+                <input type="text" name="description" placeholder="Description">
+                <input type="number" name="price" placeholder="Price" step="0.01" required>
+                <input type="number" name="stock" placeholder="Stock" required>
+                
+                <label style="display:block; margin: 10px 0 5px;">Available?</label>
+                <select name="is_available" style="width:100%; padding:10px; margin-bottom:15px;">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+
+                <label style="display:block; margin: 10px 0 5px; text-align: left;">Category</label>
+                <select name="category" style="width:100%; padding:10px; margin-bottom:15px;">
+                    <option value="Classic Milk Tea">Classic Milk Tea</option>
+                    <option value="Fruit Tea">Fruit Tea</option>
+                    <option value="Special Drinks">Special Drinks</option>
+                </select>
+
+                <button type="submit">Add Product</button>
+                
+            </form>
+
+            <div class="link">
+                <a href="/admin/products">← Back to Products</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

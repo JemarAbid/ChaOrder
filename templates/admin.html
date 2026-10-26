@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ChaOrder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .admin-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .status-Pending { background: #fff3cd; color: #856404; }
+        .status-Preparing { background: #cce5ff; color: #004085; }
+        .status-Ready { background: #d4edda; color: #155724; }
+        .status-Completed { background: #e2e3e5; color: #383d41; }
+        .status-Cancelled { background: #f8d7da; color: #721c24; }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 14px;
+        }
+        select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        .update-btn {
+            background-color: #6f4e37;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ChaOrder Admin</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/menu">Menu</a>
+            <a href="/cart">Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})</a>
+
+            {% if session.get('user_id') %}
+                <div class="dropdown">
+                    <a class="dropdown-toggle">Hello, {{ session.get('full_name') }} ▾</a>
+                    <div class="dropdown-content">
+                        <a href="/my_orders">My Orders</a>
+                        <a href="/profile">Profile</a>
+                        {% if session.get('role') == 'admin' %}
+                            <a href="/admin">Admin Dashboard</a>
+                            <a href="/admin/products">Manage Products</a>
+                        {% endif %}
+                        <hr style="margin: 0; border: none; border-top: 1px solid #eee;">
+                        <a href="/logout" style="color: #dc3545 !important;">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="admin-container">
+        <h2 class="page-title">All Orders</h2>
+        <!-- Analytics Summary Cards -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
+            <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center;">
+                <h4 style="color: #777; margin-bottom: 5px;">Total Orders</h4>
+                <p style="font-size: 24px; font-weight: bold; color: #6f4e37;">{{ total_orders }}</p>
+            </div>
+            <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center;">
+                <h4 style="color: #777; margin-bottom: 5px;">Pending Orders</h4>
+                <p style="font-size: 24px; font-weight: bold; color: #d9534f;">{{ pending_orders }}</p>
+            </div>
+            <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center;">
+                <h4 style="color: #777; margin-bottom: 5px;">Completed Revenue</h4>
+                <p style="font-size: 24px; font-weight: bold; color: #28a745;">₱{{ "%.2f"|format(total_revenue) }}</p>
+            </div>
+        </div>
+
+        {% if orders %}
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <strong>Order #{{ order.id }}</strong><br>
+                        <small>{{ order.customer_name }} • {{ order.created_at }}</small>
+                    </div>
+                    <div>
+                        <span class="status status-{{ order.status.split()[0] }}">{{ order.status }}</span>
+                    </div>
+                </div>
+
+                {% for item in order.order_items %}
+                <div class="order-item">
+                    <span>{{ item.name }} × {{ item.quantity }}</span>
+                    <span>₱{{ "%.2f"|format(item.price * item.quantity) }}</span>
+                </div>
+                {% endfor %}
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                    <strong style="color: #6f4e37;">Total: ₱{{ "%.2f"|format(order.total_amount) }}</strong>
+
+                    <form action="/update_status/{{ order.id }}" method="POST" style="display: flex; align-items: center;">
+                        <select name="status">
+                            <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Preparing" {% if order.status == 'Preparing' %}selected{% endif %}>Preparing</option>
+                            <option value="Ready for Pickup" {% if order.status == 'Ready for Pickup' %}selected{% endif %}>Ready for Pickup</option>
+                            <option value="Completed" {% if order.status == 'Completed' %}selected{% endif %}>Completed</option>
+                            <option value="Cancelled" {% if order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                        </select>
+                        <button type="submit" class="update-btn">Update</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center; color: #777; padding: 50px;">No orders yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

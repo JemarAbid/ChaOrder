@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize Order - ChaOrder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>ChaOrder</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/menu">Menu</a>
+            <a href="/cart">Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})</a>
+
+            {% if session.get('user_id') %}
+                <div class="dropdown">
+                    <a class="dropdown-toggle">Hello, {{ session.get('full_name') }} ▾</a>
+                    <div class="dropdown-content">
+                        <a href="/my_orders">My Orders</a>
+                        <a href="/profile">Profile</a>
+                        {% if session.get('role') == 'admin' %}
+                            <a href="/admin">Admin Dashboard</a>
+                            <a href="/admin/products">Manage Products</a>
+                        {% endif %}
+                        <hr style="margin: 0; border: none; border-top: 1px solid #eee;">
+                        <a href="/logout" style="color: #dc3545 !important;">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="form-container">
+        <div class="form-box" style="max-width: 450px;">
+            <h2>Customize Your Drink</h2>
+            <p style="text-align:center; margin-bottom: 20px; color: #6f4e37;">
+                <strong>{{ product.name }}</strong> - ₱{{ "%.2f"|format(product.price) }}
+            </p>
+
+            <form method="POST">
+                <label>Sugar Level</label>
+                <select name="sugar_level" required style="width:100%; padding:10px; margin-bottom:15px;">
+                    <option value="0%">0% (No Sugar)</option>
+                    <option value="25%">25%</option>
+                    <option value="50%" selected>50%</option>
+                    <option value="75%">75%</option>
+                    <option value="100%">100%</option>
+                </select>
+
+                <label>Ice Level</label>
+                <select name="ice_level" required style="width:100%; padding:10px; margin-bottom:15px;">
+                    <option value="No Ice">No Ice</option>
+                    <option value="Less Ice">Less Ice</option>
+                    <option value="Normal Ice" selected>Normal Ice</option>
+                    <option value="Extra Ice">Extra Ice</option>
+                </select>
+
+                <label>Add-ons (Optional)</label>
+                <select name="add_ons" style="width:100%; padding:10px; margin-bottom:20px;">
+                    <option value="None">None</option>
+                    <option value="Pearls">Pearls (+₱15)</option>
+                    <option value="Pudding">Pudding (+₱15)</option>
+                    <option value="Crystal Jelly">Crystal Jelly (+₱15)</option>
+                    <option value="Cream Cheese">Cream Cheese (+₱20)</option>
+                </select>
+
+                <button type="submit">Add to Cart</button>
+            </form>
+
+            <div class="link">
+                <a href="/menu">← Back to Menu</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,540 @@
+/* ===== Full-screen Webpage Setup ===== */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* This pushes everything between the header and footer to fill available space */
+body > *:not(header):not(footer):first-of-type {
+    flex: 1;
+}
+
+/* ===== Base Header (For Menu, Cart, Profile, Admin) ===== */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    position: relative;
+    z-index: 100;
+}
+
+header h1 {
+    margin: 0;
+    color: #6f4e37;
+    font-size: 1.5rem;
+}
+
+.nav-logo {
+    height: 40px;
+    width: auto;
+    vertical-align: middle;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+nav a, .dropdown-toggle {
+    color: #333333 !important;
+    text-decoration: none !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+nav a:hover, .dropdown-toggle:hover {
+    color: #6f4e37 !important;
+}
+
+/* ===== Hero Header Overrides (Homepage Only) ===== */
+header.hero-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    box-sizing: border-box;
+    z-index: 100;
+    /* Soft dark overlay behind top links for clarity */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.2), transparent) !important;
+    box-shadow: none;
+}
+
+header.hero-header nav a, 
+header.hero-header .dropdown-toggle {
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+    text-decoration: none !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 4px rgba(0, 0, 0, 0.9);
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+header.hero-header nav a:hover, 
+header.hero-header .dropdown-toggle:hover {
+    color: #ffd9b3 !important;
+    opacity: 0.95;
+}
+
+/* ===== Account Dropdown Layout ===== */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 170px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-divider {
+    margin: 0;
+    border: none;
+    border-top: 1px solid #eee;
+}
+
+.dropdown-logout {
+    color: #dc3545 !important;
+}
+
+/* ===== Full-Screen Hero Section ===== */
+.hero {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2)), 
+                url("hero-bg.jpg") no-repeat center center/cover;
+    background-color: #f5efe6;
+    padding: 0 20px 80px;
+    box-sizing: border-box;
+}
+
+.hero-tagline {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #3e2723;
+    margin-bottom: 25px;
+    max-width: 650px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.5px;
+}
+
+/* Prominent Call-to-Action Button */
+.btn-hero {
+    padding: 14px 40px;
+    font-size: 1.15rem;
+    font-weight: bold;
+    background-color: #5c3a21;
+    color: #ffffff;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.btn-hero:hover {
+    background-color: #422917;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+}
+
+/* ===== Form Box (for Register & Login) ===== */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+}
+
+.form-box {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.form-box h2 {
+    text-align: center;
+    color: #6f4e37;
+    margin-bottom: 25px;
+}
+
+.form-box input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.form-box button {
+    width: 100%;
+    padding: 12px;
+    background-color: #6f4e37;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.form-box button:hover {
+    background-color: #5a3e2b;
+}
+
+.form-box .link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.form-box .link a {
+    color: #6f4e37;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.error {
+    color: #d9534f;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.success {
+    color: #28a745;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+/* ===== Menu Page Styles ===== */
+.page-title {
+    text-align: center;
+    color: #6f4e37;
+    margin: 40px 0 30px;
+    font-size: 32px;
+}
+
+.menu-container {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain; /* Ensures the whole picture is visible without cutting off */
+    background-color: #fcf8f5; /* Soft background to fill any empty space around portrait/landscape images */
+    padding: 10px; /* Gives a nice breathing room around the cup */
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.03); /* Subtle zoom */
+}
+
+.product-info {
+    padding: 18px;
+}
+
+.product-info h3 {
+    color: #6f4e37;
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.product-info p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #6f4e37;
+}
+
+/* Category Filter Bar */
+.category-filter {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.btn-category {
+    padding: 8px 16px;
+    margin: 0 5px;
+    border-radius: 20px;
+    text-decoration: none;
+    background: #eee;
+    color: #333;
+    display: inline-block;
+}
+
+.btn-category.active {
+    background: #6f4e37;
+    color: white;
+}
+
+/* ===== Cart Container ===== */
+.cart-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.cart-item {
+    background: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.cart-total {
+    text-align: right;
+    font-size: 22px;
+    font-weight: bold;
+    color: #6f4e37;
+    margin-top: 20px;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 60px 20px;
+    color: #777;
+}
+
+/* ===== HIGH-PRIORITY DROPDOWN OVERRIDES ===== */
+/* Guarantees dropdown text is dark, legible, and un-nested from hero styles */
+header.hero-header .dropdown-content a,
+header .dropdown-content a,
+.dropdown-content a {
+    color: #333333 !important;
+    background-color: #ffffff !important;
+    text-shadow: none !important;
+    font-weight: 500 !important;
+    padding: 12px 16px !important;
+    text-decoration: none !important;
+    display: block !important;
+    text-align: left !important;
+    font-size: 14px !important;
+}
+
+header.hero-header .dropdown-content a:hover,
+header .dropdown-content a:hover,
+.dropdown-content a:hover {
+    background-color: #f5f5f5 !important;
+    color: #6f4e37 !important;
+}
+
+footer {
+    background-color: #2c221e;
+    color: #d7ccc8;
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: auto; /* Automatically pushes footer to the very bottom */
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+footer a {
+    color: #ffd9b3;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* ===== 2. Cart Badge Counter ===== */
+.cart-badge {
+    background-color: #d9534f;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 7px;
+    border-radius: 50%;
+    margin-left: 5px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+/* ===== 3. Flash Notification Toast Alerts ===== */
+.flash-container {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.flash-message {
+    background-color: #5c3a21;
+    color: white;
+    padding: 14px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ===== 4. Sold Out / Out of Stock Styling ===== */
+.product-card.disabled {
+    opacity: 0.65;
+    filter: grayscale(40%);
+}
+
+.badge-sold-out {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: #dc3545;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-disabled {
+    width: 100%;
+    padding: 10px;
+    background-color: #ccc;
+    color: #666;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: not-allowed;
+}
+
+/* ===== Image Preview Modal (Lightbox) ===== */
+.image-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    cursor: zoom-out;
+}
+
+.image-modal-content {
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    background-color: white;
+    object-fit: contain;
+    animation: zoomIn 0.25s ease-out;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.image-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    background: none;
+    border: none;
+}

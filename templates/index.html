@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChaOrder - Milk Tea Ordering</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="hero-header">
+        <div class="brand">
+            <a href="/">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="ChaOrder Logo" class="nav-logo">
+            </a>
+        </div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/menu">Menu</a>
+            <a href="/cart">
+                Cart {% if session.cart %}
+                    <span class="cart-badge">{{ session.cart|length }}</span>
+                {% endif %}
+            </a>
+
+            {% if session.get('user_id') %}
+                <div class="dropdown">
+                    <a class="dropdown-toggle">Hello, {{ session.get('full_name') }} ▾</a>
+                    <div class="dropdown-content">
+                        <a href="/my_orders">My Orders</a>
+                        <a href="/profile">Profile</a>
+                        {% if session.get('role') == 'admin' %}
+                            <a href="/admin">Admin Dashboard</a>
+                            <a href="/admin/products">Manage Products</a>
+                        {% elif session.get('role') == 'staff' %}
+                            <a href="/admin">Order Dashboard</a>
+                        {% endif %}
+                        <hr class="dropdown-divider">
+                        <a href="/logout" class="dropdown-logout">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <section class="hero">
+        <!-- Center logo removed to let the background graphic shine -->
+        <p class="hero-tagline">Order your favorite milk tea online – fast, easy, and delicious.</p>
+        <a href="/menu" class="btn-hero">Explore Menu</a>
+    </section>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for message in messages %}
+                    <div class="flash-message">
+                        <span>☕ {{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <footer>
+        <p>&copy; 2026 ChaOrder Milk Tea Shop. All rights reserved.</p>
+        <p>Crafted for fast, easy, and delicious online ordering.</p>
+    </footer>
+</body>
+</html>

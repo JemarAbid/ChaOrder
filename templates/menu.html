@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - ChaOrder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>ChaOrder</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/menu">Menu</a>
+            <a href="/cart">
+                Cart 
+                {% if session.get('cart') %}
+                    <span class="cart-badge">{{ session.get('cart')|length }}</span>
+                {% else %}
+                    <span class="cart-badge">0</span>
+                {% endif %}
+            </a>
+
+            {% if session.get('user_id') %}
+                <div class="dropdown">
+                    <a class="dropdown-toggle">Hello, {{ session.get('full_name') }} ▾</a>
+                    <div class="dropdown-content">
+                        <a href="/my_orders">My Orders</a>
+                        <a href="/profile">Profile</a>
+                        {% if session.get('role') == 'admin' %}
+                            <a href="/admin">Admin Dashboard</a>
+                            <a href="/admin/products">Manage Products</a>
+                        {% elif session.get('role') == 'staff' %}
+                            <a href="/admin">Order Dashboard</a>
+                        {% endif %}
+                        <hr class="dropdown-divider">
+                        <a href="/logout" class="dropdown-logout">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <h2 class="page-title">Our Menu</h2>
+
+    <!-- Category Filter Bar -->
+    <div class="category-filter">
+        <a href="/menu" class="btn-category {% if selected_category == 'All' %}active{% endif %}">All</a>
+    
+        {% for cat in categories %}
+            <a href="/menu?category={{ cat }}" class="btn-category {% if selected_category == cat %}active{% endif %}">{{ cat }}</a>
+        {% endfor %}
+    </div>
+
+    <!-- Product Grid -->
+    <div class="menu-container">
+        {% for product in products %}
+            {% set img_url = product.image if product.image else 'https://via.placeholder.com/300x180?text=Milk+Tea' %}
+            <div class="product-card {% if product.is_available == 'No' %}disabled{% endif %}">
+                {% if product.is_available == 'No' %}
+                    <span class="badge-sold-out">Sold Out</span>
+                {% endif %}
+
+                <!-- Image with Click-to-Enlarge Preview -->
+                <div style="overflow: hidden; cursor: zoom-in;" onclick="openImageModal(this.querySelector('img').src)">
+                    <img src="{{ img_url }}" alt="{{ product.name }}" title="Click to view full image">
+                </div>
+                
+                <div class="product-info">
+                    <!-- Clickable Title Link -->
+                    <h3>
+                        <a href="/customize/{{ product.id }}" style="text-decoration: none; color: #6f4e37; transition: color 0.2s;">
+                            {{ product.name }}
+                        </a>
+                    </h3>
+                    <p>{{ product.description or 'Delicious milk tea' }}</p>
+                    <div class="price">₱{{ "%.2f"|format(product.price) }}</div>
+                    
+                    {% if product.is_available == 'Yes' or product.is_available == None %}
+                        <a href="/customize/{{ product.id }}" class="btn-hero" style="display: block; text-align: center; padding: 10px; font-size: 14px; margin-top: 15px;">Customize & Order</a>
+                    {% else %}
+                        <button class="btn-disabled" disabled style="margin-top: 15px;">Unavailable</button>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <p style="grid-column: 1 / -1; text-align: center; color: #777; padding: 40px;">
+                No products available yet.
+            </p>
+        {% endfor %}
+    </div>
+
+    <!-- Full-Screen Image Lightbox Modal -->
+    <div id="imageModal" class="image-modal-overlay" onclick="closeImageModal()">
+        <button class="image-modal-close" onclick="closeImageModal()">&times;</button>
+        <img class="image-modal-content" id="modalImage" alt="Enlarged preview">
+    </div>
+
+    <!-- Flash Message Container -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for message in messages %}
+                    <div class="flash-message">
+                        <span>☕ {{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 ChaOrder Milk Tea Shop. All rights reserved.</p>
+        <p>Crafted for fast, easy, and delicious online ordering.</p>
+    </footer>
+
+    <!-- Lightbox Script -->
+    <script>
+        function openImageModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            if (modal && modalImg) {
+                modal.style.display = 'flex';
+                modalImg.src = imageSrc;
+            }
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

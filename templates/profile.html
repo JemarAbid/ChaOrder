@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - ChaOrder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>ChaOrder</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/menu">Menu</a>
+            <a href="/cart">
+                Cart 
+                {% if session.get('cart') %}
+                    <span class="cart-badge">{{ session.get('cart')|length }}</span>
+                {% else %}
+                    <span class="cart-badge">0</span>
+                {% endif %}
+            </a>
+
+            {% if session.get('user_id') %}
+                <div class="dropdown">
+                    <a class="dropdown-toggle">Hello, {{ session.get('full_name') }} ▾</a>
+                    <div class="dropdown-content">
+                        <a href="/my_orders">My Orders</a>
+                        <a href="/profile">Profile</a>
+                        {% if session.get('role') == 'admin' %}
+                            <a href="/admin">Admin Dashboard</a>
+                            <a href="/admin/products">Manage Products</a>
+                        {% elif session.get('role') == 'staff' %}
+                            <a href="/admin">Order Dashboard</a>
+                        {% endif %}
+                        <hr class="dropdown-divider">
+                        <a href="/logout" class="dropdown-logout">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="form-container">
+        <div class="form-box">
+            <h2>Manage Profile</h2>
+
+            {% if success %}
+                <p class="success" style="color: green; margin-bottom: 15px;">{{ success }}</p>
+            {% endif %}
+
+            <form method="POST">
+                <label style="display:block; text-align:left; margin-bottom:5px;">Full Name</label>
+                <input type="text" name="full_name" value="{{ user.full_name }}" required>
+
+                <label style="display:block; text-align:left; margin-bottom:5px;">Email (Cannot be changed)</label>
+                <input type="email" value="{{ user.email }}" disabled style="background-color: #eee; cursor: not-allowed;">
+
+                <label style="display:block; text-align:left; margin-bottom:5px;">New Password (leave blank to keep current)</label>
+                <input type="password" name="password" placeholder="New Password">
+
+                <button type="submit">Update Profile</button>
+            </form>
+
+            <div class="link">
+                <a href="/">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flash Message Container -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for message in messages %}
+                    <div class="flash-message">
+                        <span>☕ {{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 ChaOrder Milk Tea Shop. All rights reserved.</p>
+        <p>Crafted for fast, easy, and delicious online ordering.</p>
+    </footer>
+</body>
+</html>

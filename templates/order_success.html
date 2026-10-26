@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success - ChaOrder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>ChaOrder</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/menu">Menu</a>
+            <a href="/cart">Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})</a>
+
+            {% if session.get('user_id') %}
+                <div class="dropdown">
+                    <a class="dropdown-toggle">Hello, {{ session.get('full_name') }} ▾</a>
+                    <div class="dropdown-content">
+                        <a href="/my_orders">My Orders</a>
+                        <a href="/profile">Profile</a>
+                        {% if session.get('role') == 'admin' %}
+                            <a href="/admin">Admin Dashboard</a>
+                            <a href="/admin/products">Manage Products</a>
+                        {% endif %}
+                        <hr style="margin: 0; border: none; border-top: 1px solid #eee;">
+                        <a href="/logout" style="color: #dc3545 !important;">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div style="text-align: center; padding: 80px 20px;">
+        <h1 style="color: #6f4e37; margin-bottom: 20px;">Order Placed Successfully!</h1>
+        <p style="font-size: 18px; margin-bottom: 10px;">Thank you for your order.</p>
+        <p style="margin-bottom: 5px;">Order ID: <strong>#{{ order_id }}</strong></p>
+        <p style="margin-bottom: 30px;">Total Amount: <strong>₱{{ "%.2f"|format(total) }}</strong></p>
+        <p style="color: #666; margin-bottom: 30px;">Your order is now <strong>Pending</strong>. Please wait for it to be prepared.</p>
+        
+        <a href="/menu" class="btn">Order More</a>
+        <a href="/" class="btn" style="margin-left: 10px; background-color: #888;">Back to Home</a>
+    </div>
+</body>
+</html>
